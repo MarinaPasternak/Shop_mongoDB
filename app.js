@@ -3,10 +3,10 @@ const path = require('path');
 
 const express = require('express');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 
 const errorController = require('./controllers/error');
-const mongoConnect = require('./util/database').mongoConnect;
-const User = require('./models/user')
+const User = require('./models/user');
 
 const app = express();
 
@@ -15,14 +15,15 @@ app.set('views', 'views');
 
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
+const authRoutes = require('./routes/auth');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use((req, res, next) => {
   User.findById('6911155537ec0efeb4746411')
-    .then(user => {
-      req.user = new User(user.name, user.email, user.cart, user._id)
+     .then(user => {
+      req.user = user;
       next();
     })
     .catch(err => console.log(err));
@@ -30,15 +31,30 @@ app.use((req, res, next) => {
 
 app.use('/admin', adminRoutes);
 app.use(shopRoutes);
+app.use(authRoutes);
 
 app.use(errorController.get404);
 
-mongoConnect(() => {
-  // if () {
-
-  // } else {
-
-  // }
-  app.listen(3001);
-});
+mongoose
+  .connect(
+    `mongodb+srv://marynaUser:${process.env.MONGO_DB_USER_KEY}@cluster0.ddbf7zc.mongodb.net/?appName=Cluster0`
+  )
+  .then(result => {
+    User.findOne().then(user => {
+      if (!user) {
+        const user = new User({
+          name: 'Maryna',
+          email: 'test@gmail.com',
+          cart: {
+            items: []
+          }
+        });
+        user.save();
+      }
+    });
+    app.listen(3001);
+  })
+  .catch(err => {
+    console.log(err);
+  });
 
