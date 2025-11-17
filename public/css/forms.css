@@ -21,3 +21,10 @@
 .form-control textarea:focus {
   outline-color: #00695c;
 }
+
+.login-form {
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+}

@@ -10,16 +10,9 @@ const orderSchema = new Schema({
     }
   ],
   user: {
-    name: {
-      type: String,
-      required: true
-    },
-    userId: {
-      type: Schema.Types.ObjectId,
-      required: true,
-      ref: 'User'
-    }
+    name: { type: String, required: true },
+    userId: { type: Schema.Types.ObjectId, required: true, ref: 'User' }
   }
-});
+}, { timestamps: true });
 
 module.exports = mongoose.model('Order', orderSchema);
