@@ -8,6 +8,8 @@ This is a simple shop app.
 - Orders - list of orders
 - Add Product - create a new product
 - Admin Products - manage products
+- Login\Logout
+- Signup
 
 ## Examples of pages
 ### Admin Products
