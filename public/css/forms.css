@@ -28,3 +28,7 @@
   flex-direction: column;
   margin: auto;
 }
+
+.form-control input.invalid {
+  border-color: rgb(231, 121, 121);
+}
