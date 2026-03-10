@@ -9,9 +9,11 @@ const router = express.Router();
 
 const loginValidation = [
   body('email')
+    .trim()
     .isEmail()
     .withMessage('Please enter a valid email.'),
   body('password')
+    .trim()
     .isLength({ min: 5 })
     .withMessage('Password must be at least 5 characters long.')
 ];
@@ -40,7 +42,8 @@ router.post(
       'Please enter a password with only numbers and text and at least 5 characters.'
     )
       .isLength({ min: 5 })
-      .isAlphanumeric(),
+      .isAlphanumeric()
+      .trim(),
     body('confirmPassword').custom((value, { req }) => {
       if (value !== req.body.password) {
         throw new Error('Passwords have to match!');

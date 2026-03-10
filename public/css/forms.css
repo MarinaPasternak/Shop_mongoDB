@@ -29,6 +29,7 @@
   margin: auto;
 }
 
-.form-control input.invalid {
-  border-color: rgb(231, 121, 121);
+.form-control input.invalid,
+.form-control textarea.invalid {
+  border-color: red;
 }
