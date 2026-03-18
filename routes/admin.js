@@ -22,11 +22,12 @@ router.post(
       .isString()
       .isLength({ min: 3 })
       .trim(),
-    body('imageUrl').isURL(),
+    body('imageUrl').isURL().withMessage('URL is invalid'),
     body('price').isFloat(),
     body('description')
       .isLength({ min: 5, max: 400 })
       .trim()
+      .withMessage('Count of symbols 5-400')
   ],
   isAuth,
   adminController.postAddProduct
@@ -42,11 +43,12 @@ router.post(
       .isString()
       .isLength({ min: 3 })
       .trim(),
-    body('imageUrl').isURL(),
+    body('imageUrl').isURL().withMessage('URL is invalid'),
     body('price').isFloat(),
     body('description')
       .isLength({ min: 5, max: 400 })
       .trim()
+      .withMessage('Count of symbols 5-400')
   ],
   isAuth,
   adminController.postEditProduct

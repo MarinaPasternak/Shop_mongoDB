@@ -41,10 +41,16 @@ app.use((req, res, next) => {
 
   User.findById(req.session.user._id)
     .then(user => {
+      if (!user) {
+        return next();
+      }
+
       req.user = user;
       next();
     })
-    .catch(err => console.log(err));
+    .catch(err => {
+      throw new Error(err);
+    });
 });
 
 app.use((req, res, next) => {
@@ -57,7 +63,13 @@ app.use('/admin', adminRoutes);
 app.use(shopRoutes);
 app.use(authRoutes);
 
+app.get('/505', errorController.get505);
+
 app.use(errorController.get404);
+
+app.use((error, req, res, next) => {
+  res.redirect('/505');
+});
 
 app.use((req, res, next) => {
   console.log('Session:', req.session);

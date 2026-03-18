@@ -24,7 +24,7 @@ exports.postAddProduct = (req, res, next) => {
     console.log(errors.array());
     return res.status(422).render('admin/edit-product', {
       pageTitle: 'Add Product',
-      path: '/admin/edit-product',
+      path: '/admin/add-product',
       editing: false,
       hasError: true,
       product: {
@@ -43,17 +43,19 @@ exports.postAddProduct = (req, res, next) => {
     price: price,
     description: description,
     imageUrl: imageUrl,
-    userId: req.user
+    userId: req.user._id
   });
   product
     .save()
     .then(result => {
-      // console.log(result);
       console.log('Created Product');
       res.redirect('/admin/products');
     })
     .catch(err => {
-      console.log(err);
+      console.log('SAVE ERROR:', err);
+      const error = new Error(err);
+      error.httpStatusCode = 505;
+      return next(error);
     });
 };
 
@@ -78,7 +80,12 @@ exports.getEditProduct = (req, res, next) => {
         validationErrors: []
       });
     })
-    .catch(err => console.log(err));
+    .catch(err => {
+      console.log('SAVE ERROR:', err);
+      const error = new Error(err);
+      error.httpStatusCode = 505;
+      return next(error);
+    });
 };
 
 exports.postEditProduct = (req, res, next) => {
@@ -122,7 +129,12 @@ exports.postEditProduct = (req, res, next) => {
         res.redirect('/admin/products');
       });
     })
-    .catch(err => console.log(err));
+    .catch(err => {
+      console.log('SAVE ERROR:', err);
+      const error = new Error(err);
+      error.httpStatusCode = 505;
+      return next(error);
+    });
 };
 
 exports.getProducts = (req, res, next) => {
@@ -135,7 +147,12 @@ exports.getProducts = (req, res, next) => {
         path: '/admin/products'
       });
     })
-    .catch(err => console.log(err));
+    .catch(err => {
+      console.log('SAVE ERROR:', err);
+      const error = new Error(err);
+      error.httpStatusCode = 505;
+      return next(error);
+    });
 };
 
 exports.postDeleteProduct = (req, res, next) => {
@@ -145,5 +162,10 @@ exports.postDeleteProduct = (req, res, next) => {
       console.log('DESTROYED PRODUCT');
       res.redirect('/admin/products');
     })
-    .catch(err => console.log(err));
+    .catch(err => {
+      console.log('SAVE ERROR:', err);
+      const error = new Error(err);
+      error.httpStatusCode = 505;
+      return next(error);
+    });
 };
