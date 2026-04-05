@@ -19,6 +19,7 @@
           <p>
             <strong>Total:</strong> $
             <%= order.products.reduce((sum, p) => sum + (p.product.price || 0) * p.quantity, 0).toFixed(2) %>
+            <a class="ml-1" href="/orders/<%= order._id %>"><b>Invoice</b></a>
           </p>
         </section>
       <% }) %>
