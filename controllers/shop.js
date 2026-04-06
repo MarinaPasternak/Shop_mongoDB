@@ -5,20 +5,30 @@ const PDFDocument = require('pdfkit');
 
 const Product = require('../models/product');
 const Order = require('../models/order');
-const { error } = require('console');
+const { getPaginatedProducts, ITEMS_PER_PAGE } = require('../util/getPaginatedProducts');
 
-exports.getProducts = (req, res, next) => {
-  Product.find()
-    .then(products => {
-      res.render('shop/product-list', {
-        prods: products,
-        pageTitle: 'All Products',
-        path: '/products',
-      });
-    })
-    .catch(err => {
-      console.log(err);
+exports.getProducts = async (req, res, next) => {
+  const page = +req.query.page || 1;
+
+  try {
+    const { products, totalItems } = await getPaginatedProducts(page);
+
+    res.render('shop/product-list', {
+      prods: products,
+      pageTitle: 'All Products',
+      path: '/products',
+      currentPage: page,
+      hasNextPage: page * ITEMS_PER_PAGE < totalItems,
+      hasPreviousPage: page > 1,
+      nextPage: page + 1,
+      previousPage: page - 1,
+      lastPage: Math.ceil(totalItems / ITEMS_PER_PAGE)
     });
+
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
 };
 
 exports.getProduct = (req, res, next) => {
@@ -34,19 +44,28 @@ exports.getProduct = (req, res, next) => {
     .catch(err => console.log(err));
 };
 
-exports.getIndex = (req, res, next) => {
-  Product.find()
-    .then(products => {
-      res.render('shop/index', {
-        prods: products,
-        pageTitle: 'Shop',
-        path: '/',
-        csrfToken: req.csrfToken()
-      });
-    })
-    .catch(err => {
-      console.log(err);
+exports.getIndex = async (req, res, next) => {
+  const page = +req.query.page || 1;
+
+  try {
+    const { products, totalItems } = await getPaginatedProducts(page);
+
+    res.render('shop/index', {
+      prods: products,
+      pageTitle: 'Shop',
+      path: '/',
+      currentPage: page,
+      hasNextPage: page * ITEMS_PER_PAGE < totalItems,
+      hasPreviousPage: page > 1,
+      nextPage: page + 1,
+      previousPage: page - 1,
+      lastPage: Math.ceil(totalItems / ITEMS_PER_PAGE)
     });
+
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
 };
 
 exports.getCart = async (req, res, next) => {
